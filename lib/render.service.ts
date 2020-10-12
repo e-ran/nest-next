@@ -1,6 +1,6 @@
 import { HttpServer, InternalServerErrorException } from '@nestjs/common';
 import { ParsedUrlQuery } from 'querystring';
-import { isInternalUrl } from './next-utils';
+import { isInternalUrl, setInternalUrlPrefix } from './next-utils';
 import {
   ErrorHandler,
   ErrorRenderer,
@@ -147,6 +147,11 @@ export class RenderService {
   public isInternalUrl(url: string): boolean {
     return isInternalUrl(url);
   }
+
+  public setInternalUrlPrefix(url: string) {
+    setInternalUrlPrefix(url);
+  }
+  
 
   /**
    * Check if the service has been initialized by the module

@@ -8,13 +8,17 @@ import { IncomingMessage, ServerResponse } from 'http';
 import { parse as parseUrl } from 'url';
 import { RenderService } from './render.service';
 import { ErrorResponse } from './types';
+import { ApplicationConfig } from '@nestjs/core';
+import { setInternalUrlPrefix } from './next-utils';
 
 @Catch()
 export class RenderFilter implements ExceptionFilter {
   private readonly service: RenderService;
+  private readonly nestConfig: ApplicationConfig;
 
-  constructor(service: RenderService) {
+  constructor(service: RenderService, nestConfig: ApplicationConfig) {
     this.service = service;
+    this.nestConfig = nestConfig;
   }
 
   /**
@@ -48,6 +52,7 @@ export class RenderFilter implements ExceptionFilter {
       if (!res.headersSent && req.url) {
         // check to see if the URL requested is an internal nextjs route
         // if internal, the url is to some asset (ex /_next/*) that needs to be rendered by nextjs
+        this.service.setInternalUrlPrefix(this.nestConfig.getGlobalPrefix());
         if (this.service.isInternalUrl(req.url)) {
           if (isFastify) {
             response.sent = true;

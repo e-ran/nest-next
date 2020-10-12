@@ -13,6 +13,8 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import path from 'path';
+
 const internalPrefixes = [/^\/_next\//, /^\/static\//];
 
 export function isInternalUrl(url: string): boolean {
@@ -23,4 +25,17 @@ export function isInternalUrl(url: string): boolean {
   }
 
   return false;
+}
+
+let lastPrefix = '';
+
+export function setInternalUrlPrefix(prefix: string){
+  if(lastPrefix === prefix){
+    return;
+  }
+  
+  lastPrefix = prefix;
+
+  internalPrefixes[0] = new RegExp('^' + path.join(prefix, '/_next/'));
+  internalPrefixes[1] = new RegExp('^' + path.join(prefix, '/static/'));
 }

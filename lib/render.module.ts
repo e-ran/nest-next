@@ -47,7 +47,7 @@ export class RenderModule {
             nestConfig: ApplicationConfig,
             service: RenderService,
           ) => {
-            const filter = new RenderFilter(service);
+            const filter = new RenderFilter(service, nestConfig);
             nestConfig.addGlobalFilter(filter);
 
             return filter;
@@ -89,7 +89,7 @@ export class RenderModule {
       this.service.setRenderer(next.render.bind(next));
       this.service.setErrorRenderer(next.renderError.bind(next));
       this.service.bindHttpServer(this.httpAdapterHost.httpAdapter);
-      this.applicationConfig.useGlobalFilters(new RenderFilter(this.service));
+      this.applicationConfig.useGlobalFilters(new RenderFilter(this.service, this.applicationConfig));
     }
   }
 }
